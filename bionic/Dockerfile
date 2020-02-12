@@ -18,11 +18,18 @@ RUN apt-get update \
         postgresql-client \
         pv \
         python-dev \
+        python2.7-dev \
         python3.7-dev \
         screen \
         supervisor \
         tmux \
         vim-tiny \
+        # Extras used by RFDS project
+        binutils \
+        libproj-dev \
+        gdal-bin \
+        ruby-full \
+        git-lfs \
     && rm -rf /var/lib/apt/lists/*
 
 ENV DOCKER_PACKAGE_FILENAME=docker-ce_18.06.3~ce~3-0~ubuntu_amd64.deb
