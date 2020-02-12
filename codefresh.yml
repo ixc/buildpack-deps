@@ -1,0 +1,16 @@
+version: '1.0'
+
+steps:
+  build_bionic:
+    type: build
+    title: Building Bionic
+    dockerfile: bionic/Dockerfile
+    image_name: interaction/buildpack-deps
+    tag: bionic
+    no_cache: true
+
+  push_bionic:
+    type: push
+    title: Pushing Bionic to Default Registry
+    candidate: '${{build_bionic}}'
+    tag: bionic
