@@ -1,7 +1,7 @@
 version: '1.0'
 
 steps:
-  clone_bionic:
+  main_clone:
     type: git-clone
     title: Cloning Bionic
     repo: ixc/buildpack-deps
