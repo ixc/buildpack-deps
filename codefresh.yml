@@ -5,7 +5,7 @@ steps:
     type: git-clone
     repo: ixc/buildpack-deps
 
-  build_image:
+  build_images:
     type: build
     image_name: interaction/buildpack-deps
     no_cache: true
@@ -17,7 +17,7 @@ steps:
         dockerfile: focal/Dockerfile
         tag: focal
 
-  push_image:
+  push_images:
     type: push
     scale:
       push_bionic:
