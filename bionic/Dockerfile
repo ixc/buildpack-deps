@@ -31,7 +31,7 @@ RUN wget -nv "https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/
     && apt install -y --no-install-recommends "./${DOCKER_PACKAGE_FILENAME}" \
     && rm -rf /var/lib/apt/lists/* "${DOCKER_PACKAGE_FILENAME}"
 
-ENV DOCKER_COMPOSE_VERSION=1.24.0
+ENV DOCKER_COMPOSE_VERSION=1.26.0
 RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
 RUN chmod +x /usr/local/bin/docker-compose
 RUN wget -nv -O /etc/bash_completion.d/docker-compose "https://raw.githubusercontent.com/docker/compose/${DOCKER_COMPOSE_VERSION}/contrib/completion/bash/docker-compose"
@@ -40,7 +40,7 @@ RUN wget -nv -O /etc/bash_completion.d/docker-compose "https://raw.githubusercon
 ENV DOCKERIZE_VERSION=0.6.0
 RUN wget -nv -O - "https://github.com/jwilder/dockerize/releases/download/v${DOCKERIZE_VERSION}/dockerize-linux-amd64-v${DOCKERIZE_VERSION}.tar.gz" | tar -xz -C /usr/local/bin/ -f -
 
-ENV TINI_VERSION=0.18.0
+ENV TINI_VERSION=0.19.0
 RUN wget -nv -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static"
 RUN chmod +x /usr/local/bin/tini
 
