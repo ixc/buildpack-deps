@@ -6,16 +6,27 @@ steps:
     title: Cloning Git Repository
     repo: ixc/buildpack-deps
 
-  build_bionic:
+  build_image:
     type: build
-    title: Building Bionic
-    dockerfile: bionic/Dockerfile
     image_name: interaction/buildpack-deps
-    tag: bionic
     no_cache: true
+    title: Building Images
+    scale:
+      build_bionic:
+        dockerfile: bionic/Dockerfile
+        tag: bionic
+      build_focal:
+        title: Building Focal
+        dockerfile: focal/Dockerfile
+        tag: focal
 
-  push_bionic:
+  push_image:
     type: push
-    title: Pushing Bionic to Default Registry
-    candidate: '${{build_bionic}}'
-    tag: bionic
+    title: Pushing Images to Default Registry
+    scale:
+      push_bionic:
+        candidate: '${{build_bionic}}'
+        tag: bionic
+      push_focal:
+        candidate: '${{build_focal}}'
+        tag: focal
