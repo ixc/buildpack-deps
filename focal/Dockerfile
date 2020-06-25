@@ -26,7 +26,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ENV DOCKER_PACKAGE_FILENAME=docker-ce_19.03.12~3-0~ubuntu-focal_amd64.deb
-RUN wget -nv "https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/${DOCKER_PACKAGE_FILENAME}" \
+RUN wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_PACKAGE_FILENAME}" \
     && apt-get update \
     && apt install -y --no-install-recommends "./${DOCKER_PACKAGE_FILENAME}" \
     && rm -rf /var/lib/apt/lists/* "${DOCKER_PACKAGE_FILENAME}"
