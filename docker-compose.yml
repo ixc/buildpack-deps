@@ -1,0 +1,9 @@
+version: '2.4'
+
+services:
+  bionic:
+    build: bionic
+    image: interaction/buildpack-deps:bionic
+  focal:
+    build: focal
+    image: interaction/buildpack-deps:focal
