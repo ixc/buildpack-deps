@@ -25,11 +25,15 @@ RUN apt-get update \
         vim-tiny \
     && rm -rf /var/lib/apt/lists/*
 
-ENV DOCKER_PACKAGE_FILENAME=docker-ce_19.03.12~3-0~ubuntu-focal_amd64.deb
-RUN wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_PACKAGE_FILENAME}" \
+ENV CONTAINERD_FILENAME=containerd.io_1.2.13-2_amd64.deb
+ENV DOCKER_CE_CLI_FILENAME=docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb
+ENV DOCKER_CE_FILENAME=docker-ce_19.03.12~3-0~ubuntu-focal_amd64.deb
+RUN wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${CONTAINERD_FILENAME}" \
+    && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_CE_CLI_FILENAME}" \
+    && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_CE_FILENAME}" \
     && apt-get update \
-    && apt install -y --no-install-recommends "./${DOCKER_PACKAGE_FILENAME}" \
-    && rm -rf /var/lib/apt/lists/* "${DOCKER_PACKAGE_FILENAME}"
+    && apt install -y --no-install-recommends "./${CONTAINERD_FILENAME}" "./${DOCKER_CE_CLI_FILENAME}" "./${DOCKER_CE_FILENAME}" \
+    && rm -rf /var/lib/apt/lists/* "${CONTAINERD_FILENAME}" "${DOCKER_CE_CLI_FILENAME}" "${DOCKER_CE_FILENAME}"
 
 ENV DOCKER_COMPOSE_VERSION=1.26.0
 RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
