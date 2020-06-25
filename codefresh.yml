@@ -10,9 +10,9 @@ steps:
     type: build
     image_name: interaction/buildpack-deps
     no_cache: true
-    title: Building Images
     scale:
       build_bionic:
+        title: Building Bionic
         dockerfile: bionic/Dockerfile
         tag: bionic
       build_focal:
@@ -22,11 +22,12 @@ steps:
 
   push_image:
     type: push
-    title: Pushing Images to Default Registry
     scale:
       push_bionic:
+        title: Pushing Bionic to Default Registry
         candidate: '${{build_bionic}}'
         tag: bionic
       push_focal:
+        title: Pushing Focal to Default Registry
         candidate: '${{build_focal}}'
         tag: focal
