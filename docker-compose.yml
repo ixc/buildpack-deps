@@ -7,3 +7,6 @@ services:
   focal:
     build: focal
     image: interaction/buildpack-deps:focal
+  latest:
+    build: focal
+    image: interaction/buildpack-deps:latest
