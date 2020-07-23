@@ -1,8 +1,7 @@
 # syntax = docker/dockerfile:experimental
 FROM buildpack-deps:bionic
 
-RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
-    apt-get update \
+RUN apt-get update \
     && apt-get upgrade -y --no-install-recommends \
     && apt-get install -y --no-install-recommends \
         apache2-utils \
@@ -25,7 +24,8 @@ RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
         screen \
         supervisor \
         tmux \
-        vim-tiny
+        vim-tiny \
+    && rm -rf rm -rf /var/lib/apt/lists/*
 
 RUN git lfs install --skip-repo --system
 
