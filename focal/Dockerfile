@@ -10,6 +10,7 @@ RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
         bsdmainutils \
         dnsutils \
         gettext  \
+        git-lfs \
         htop \
         iputils-ping \
         jq \
@@ -25,6 +26,8 @@ RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
         supervisor \
         tmux \
         vim-tiny
+
+RUN git lfs install --skip-repo --system
 
 ENV CONTAINERD_FILENAME=containerd.io_1.2.13-2_amd64.deb
 ENV DOCKER_CE_CLI_FILENAME=docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb

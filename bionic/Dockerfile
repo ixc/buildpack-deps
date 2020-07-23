@@ -10,6 +10,7 @@ RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
         bsdmainutils \
         dnsutils \
         gettext  \
+        git-lfs \
         htop \
         iputils-ping \
         jq \
@@ -25,6 +26,8 @@ RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
         supervisor \
         tmux \
         vim-tiny
+
+RUN git lfs install --skip-repo --system
 
 ENV DOCKER_PACKAGE_FILENAME=docker-ce_18.06.3~ce~3-0~ubuntu_amd64.deb
 RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
