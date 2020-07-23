@@ -1,6 +1,8 @@
+# syntax = docker/dockerfile:experimental
 FROM buildpack-deps:focal
 
-RUN apt-get update \
+RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
+    apt-get update \
     && apt-get upgrade -y --no-install-recommends \
     && apt-get install -y --no-install-recommends \
         apache2-utils \
@@ -22,18 +24,18 @@ RUN apt-get update \
         screen \
         supervisor \
         tmux \
-        vim-tiny \
-    && rm -rf /var/lib/apt/lists/*
+        vim-tiny
 
 ENV CONTAINERD_FILENAME=containerd.io_1.2.13-2_amd64.deb
 ENV DOCKER_CE_CLI_FILENAME=docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb
 ENV DOCKER_CE_FILENAME=docker-ce_19.03.12~3-0~ubuntu-focal_amd64.deb
-RUN wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${CONTAINERD_FILENAME}" \
+RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
+    wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${CONTAINERD_FILENAME}" \
     && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_CE_CLI_FILENAME}" \
     && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_CE_FILENAME}" \
     && apt-get update \
     && apt install -y --no-install-recommends "./${CONTAINERD_FILENAME}" "./${DOCKER_CE_CLI_FILENAME}" "./${DOCKER_CE_FILENAME}" \
-    && rm -rf /var/lib/apt/lists/* "${CONTAINERD_FILENAME}" "${DOCKER_CE_CLI_FILENAME}" "${DOCKER_CE_FILENAME}"
+    && rm -rf "${CONTAINERD_FILENAME}" "${DOCKER_CE_CLI_FILENAME}" "${DOCKER_CE_FILENAME}"
 
 ENV DOCKER_COMPOSE_VERSION=1.26.0
 RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"

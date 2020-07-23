@@ -1,6 +1,8 @@
+# syntax = docker/dockerfile:experimental
 FROM buildpack-deps:bionic
 
-RUN apt-get update \
+RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
+    apt-get update \
     && apt-get upgrade -y --no-install-recommends \
     && apt-get install -y --no-install-recommends \
         apache2-utils \
@@ -22,14 +24,14 @@ RUN apt-get update \
         screen \
         supervisor \
         tmux \
-        vim-tiny \
-    && rm -rf /var/lib/apt/lists/*
+        vim-tiny
 
 ENV DOCKER_PACKAGE_FILENAME=docker-ce_18.06.3~ce~3-0~ubuntu_amd64.deb
-RUN wget -nv "https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/${DOCKER_PACKAGE_FILENAME}" \
+RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
+    wget -nv "https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/${DOCKER_PACKAGE_FILENAME}" \
     && apt-get update \
     && apt install -y --no-install-recommends "./${DOCKER_PACKAGE_FILENAME}" \
-    && rm -rf /var/lib/apt/lists/* "${DOCKER_PACKAGE_FILENAME}"
+    && rm -rf "${DOCKER_PACKAGE_FILENAME}"
 
 ENV DOCKER_COMPOSE_VERSION=1.26.0
 RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"

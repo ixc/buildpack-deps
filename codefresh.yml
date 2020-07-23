@@ -9,6 +9,7 @@ steps:
     type: build
     image_name: interaction/buildpack-deps
     no_cache: true
+    buildkit: true
     scale:
       build_bionic:
         dockerfile: bionic/Dockerfile
