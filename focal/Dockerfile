@@ -60,3 +60,8 @@ ENV LC_ALL=en_US.UTF-8
 
 # Indicate that we are running in Docker.
 ENV DOCKER=1
+
+# Enable persistent bash history.
+VOLUME /root/var
+ENV HISTFILE=/root/var/.bash_history
+ENV PROMPT_COMMAND='history -a'
