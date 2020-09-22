@@ -19,7 +19,7 @@ RUN apt-get update \
         nginx \
         postgresql-client \
         pv \
-        python-dev \
+        python2.7-dev \
         python3.6-dev \
         python3.7-dev \
         screen \
