@@ -20,6 +20,7 @@ RUN apt-get update \
         postgresql-client \
         pv \
         python-dev \
+        python3.6-dev \
         python3.7-dev \
         screen \
         supervisor \
