@@ -34,27 +34,27 @@ RUN apt-get update \
         vim-tiny \
     && rm -rf rm -rf /var/lib/apt/lists/*
 
-RUN git lfs install --skip-repo --system
+# RUN git lfs install --skip-repo --system
 
-ENV CONTAINERD_FILENAME=containerd.io_1.2.13-2_${TARGETARCH}.deb
-ENV DOCKER_CE_CLI_FILENAME=docker-ce-cli_19.03.12~3-0~ubuntu-focal_${TARGETARCH}.deb
-ENV DOCKER_CE_FILENAME=docker-ce_19.03.12~3-0~ubuntu-focal_${TARGETARCH}.deb
-RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
-    wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/${TARGETARCH}/${CONTAINERD_FILENAME}" \
-    && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/${TARGETARCH}/${DOCKER_CE_CLI_FILENAME}" \
-    && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/${TARGETARCH}/${DOCKER_CE_FILENAME}" \
-    && apt-get update \
-    && apt install -y --no-install-recommends "./${CONTAINERD_FILENAME}" "./${DOCKER_CE_CLI_FILENAME}" "./${DOCKER_CE_FILENAME}" \
-    && rm -rf "${CONTAINERD_FILENAME}" "${DOCKER_CE_CLI_FILENAME}" "${DOCKER_CE_FILENAME}"
+# ENV CONTAINERD_FILENAME=containerd.io_1.2.13-2_${TARGETARCH}.deb
+# ENV DOCKER_CE_CLI_FILENAME=docker-ce-cli_19.03.12~3-0~ubuntu-focal_${TARGETARCH}.deb
+# ENV DOCKER_CE_FILENAME=docker-ce_19.03.12~3-0~ubuntu-focal_${TARGETARCH}.deb
+# RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
+#     wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/${TARGETARCH}/${CONTAINERD_FILENAME}" \
+#     && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/${TARGETARCH}/${DOCKER_CE_CLI_FILENAME}" \
+#     && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/${TARGETARCH}/${DOCKER_CE_FILENAME}" \
+#     && apt-get update \
+#     && apt install -y --no-install-recommends "./${CONTAINERD_FILENAME}" "./${DOCKER_CE_CLI_FILENAME}" "./${DOCKER_CE_FILENAME}" \
+#     && rm -rf "${CONTAINERD_FILENAME}" "${DOCKER_CE_CLI_FILENAME}" "${DOCKER_CE_FILENAME}"
 
-ENV DOCKER_COMPOSE_VERSION=1.26.0
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        python3-pip \
-        python3-setuptools \
-        python3-wheel \
-    && pip3 install "docker-compose==${DOCKER_COMPOSE_VERSION}" \
-    && rm -rf rm -rf /var/lib/apt/lists/*
+# ENV DOCKER_COMPOSE_VERSION=1.26.0
+# RUN apt-get update \
+#     && apt-get install -y --no-install-recommends \
+#         python3-pip \
+#         python3-setuptools \
+#         python3-wheel \
+#     && pip3 install "docker-compose==${DOCKER_COMPOSE_VERSION}" \
+#     && rm -rf rm -rf /var/lib/apt/lists/*
 
 # ENV DOCKER_COMPOSE_VERSION=1.26.0
 # RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"

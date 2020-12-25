@@ -37,21 +37,21 @@ RUN apt-get update \
 
 # RUN git lfs install --skip-repo --system
 
-ENV DOCKER_PACKAGE_FILENAME=docker-ce_18.06.3~ce~3-0~ubuntu_${TARGETARCH}.deb
-RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
-    wget -nv "https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/${TARGETARCH}/${DOCKER_PACKAGE_FILENAME}" \
-    && apt-get update \
-    && apt install -y --no-install-recommends "./${DOCKER_PACKAGE_FILENAME}" \
-    && rm -rf "${DOCKER_PACKAGE_FILENAME}"
+# ENV DOCKER_PACKAGE_FILENAME=docker-ce_18.06.3~ce~3-0~ubuntu_${TARGETARCH}.deb
+# RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
+#     wget -nv "https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/${TARGETARCH}/${DOCKER_PACKAGE_FILENAME}" \
+#     && apt-get update \
+#     && apt install -y --no-install-recommends "./${DOCKER_PACKAGE_FILENAME}" \
+#     && rm -rf "${DOCKER_PACKAGE_FILENAME}"
 
-ENV DOCKER_COMPOSE_VERSION=1.26.0
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        python3-pip \
-        python3-setuptools \
-        python3-wheel \
-    && pip3 install "docker-compose==${DOCKER_COMPOSE_VERSION}" \
-    && rm -rf rm -rf /var/lib/apt/lists/*
+# ENV DOCKER_COMPOSE_VERSION=1.26.0
+# RUN apt-get update \
+#     && apt-get install -y --no-install-recommends \
+#         python3-pip \
+#         python3-setuptools \
+#         python3-wheel \
+#     && pip3 install "docker-compose==${DOCKER_COMPOSE_VERSION}" \
+#     && rm -rf rm -rf /var/lib/apt/lists/*
 
 # ENV DOCKER_COMPOSE_VERSION=1.26.0
 # RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
