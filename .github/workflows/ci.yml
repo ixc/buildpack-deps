@@ -82,6 +82,9 @@ jobs:
       - self-hosted
     needs: manifest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Update README
         uses: peter-evans/dockerhub-description@v2
         with:
