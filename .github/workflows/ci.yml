@@ -63,6 +63,20 @@ jobs:
             --amend ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
             --amend ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
           docker manifest push ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}
+      - name: Create and Push Manifest List (OS)
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker manifest create ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:${{ matrix.os }} \
+            --amend ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
+            --amend ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
+          docker manifest push ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:${{ matrix.os }}
+      - name: Create and Push Manifest List (latest)
+        if: github.ref == 'refs/heads/master' && matrix.os == 'focal'
+        run: |
+          docker manifest create ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:latest \
+            --amend ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
+            --amend ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
+          docker manifest push ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:latest
     strategy:
       matrix:
         os:
