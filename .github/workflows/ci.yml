@@ -81,6 +81,7 @@ jobs:
     runs-on:
       - self-hosted
     needs: manifest
+    steps:
       - name: Update README
         uses: peter-evans/dockerhub-description@v2
         with:
