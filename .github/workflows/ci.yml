@@ -12,7 +12,7 @@ jobs:
       - linux
       - self-hosted
     env:
-      REPO: interaction/buildpack-deps
+      DOCKER_REPO: interaction/buildpack-deps
     strategy:
       matrix:
         arch:
@@ -47,7 +47,7 @@ jobs:
       - self-hosted
     needs: image
     env:
-      REPO: interaction/buildpack-deps
+      DOCKER_REPO: interaction/buildpack-deps
     strategy:
       matrix:
         os:
@@ -55,12 +55,12 @@ jobs:
           - focal
     steps:
       # This action transforms ${{ git.ref }} from `refs/heads/<branch_name>` to
-      # `${{ env.REPO }}:<branch_name>`. It must return a single tag.
+      # `${{ env.DOCKER_REPO }}:<branch_name>`. It must return a single tag.
       - name: Docker meta
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: ${{ env.REPO }}
+          images: ${{ env.DOCKER_REPO }}
           tag-latest: false
 
       - name: Login to Docker Hub
@@ -72,13 +72,13 @@ jobs:
       - name: Create Manifest List (Branch)
         run: |
           docker manifest create ${{ steps.docker_meta.outputs.tags }}-${{ matrix.os }} \
-            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
-            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
+            --amend ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
+            --amend ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
           docker manifest push ${{ steps.docker_meta.outputs.tags }}-${{ matrix.os }}
 
       - name: Create Manifest List (SHA)
         run: |
-          docker manifest create ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }} \
-            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
-            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
-          docker manifest push ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}
+          docker manifest create ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }} \
+            --amend ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
+            --amend ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
+          docker manifest push ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}
