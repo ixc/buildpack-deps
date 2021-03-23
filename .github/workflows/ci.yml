@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push
+      - name: Build and Push Image
         uses: docker/build-push-action@v2
         with:
           file: ${{ matrix.os }}/Dockerfile
@@ -63,14 +63,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Create Manifest List (Branch)
+      - name: Create and Push Manifest List (Branch)
         run: |
           docker manifest create ${{ steps.docker_meta.outputs.tags }}-${{ matrix.os }} \
             --amend ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
             --amend ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
           docker manifest push ${{ steps.docker_meta.outputs.tags }}-${{ matrix.os }}
 
-      - name: Create Manifest List (SHA)
+      - name: Create and Push Manifest List (SHA)
         run: |
           docker manifest create ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }} \
             --amend ${{ env.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
