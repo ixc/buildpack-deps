@@ -6,25 +6,24 @@ on:
       - multiarch
 
 jobs:
-  docker:
-    runs-on: ubuntu-latest
+  image:
+    runs-on:
+      - ${{ matrix.arch }}
+      - linux
+      - self-hosted
+    env:
+      REPO: interaction/buildpack-deps
+    strategy:
+      matrix:
+        arch:
+          - arm64
+          - x64
+        os:
+          - bionic
+          - focal
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -32,26 +31,54 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Bionic
+      - name: Build and Push
         uses: docker/build-push-action@v2
         with:
-          context: bionic
-          file: bionic/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          context: .
+          file: ${{ matrix.os }}/Dockerfile
           push: true
-          tags: interaction/buildpack-deps:bionic-multiarch
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          tags: ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-${{ matrix.arch }}
+          build-args: |
+            GIT_COMMIT=${{ github.sha }}
 
-      - name: Build and Push Focal
-        uses: docker/build-push-action@v2
+  manifest:
+    runs-on:
+      - linux
+      - self-hosted
+    needs: image
+    env:
+      REPO: interaction/buildpack-deps
+    strategy:
+      matrix:
+        os:
+          - bionic
+          - focal
+    steps:
+      # This action transforms ${{ git.ref }} from `refs/heads/<branch_name>` to
+      # `${{ env.REPO }}:<branch_name>`. It must return a single tag.
+      - name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
         with:
-          context: focal
-          file: focal/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            interaction/buildpack-deps:focal-multiarch
-            interaction/buildpack-deps:latest-multiarch
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          images: ${{ env.REPO }}
+          tag-latest: false
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Create Manifest List (Branch)
+        run: |
+          docker manifest create ${{ steps.docker_meta.outputs.tags }}-${{ matrix.os }} \
+            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
+            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
+          docker manifest push ${{ steps.docker_meta.outputs.tags }}-${{ matrix.os }}
+
+      - name: Create Manifest List (SHA)
+        run: |
+          docker manifest create ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }} \
+            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-arm64 \
+            --amend ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-x64
+          docker manifest push ${{ env.REPO }}:sha-${{ github.sha }}-${{ matrix.os }}

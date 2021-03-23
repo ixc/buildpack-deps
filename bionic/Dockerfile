@@ -5,9 +5,11 @@
 
 FROM buildpack-deps:bionic as base-amd64
 ENV DOCKERIZE_ARCH=amd64
+ENV TINI_ARCH=amd64
 
 FROM buildpack-deps:bionic as base-arm64
 ENV DOCKERIZE_ARCH=armhf
+ENV TINI_ARCH=arm64
 
 FROM base-${TARGETARCH}
 ARG TARGETARCH
@@ -67,7 +69,7 @@ ENV DOCKERIZE_VERSION=0.6.0
 RUN wget -nv -O - "https://github.com/jwilder/dockerize/releases/download/v${DOCKERIZE_VERSION}/dockerize-linux-${DOCKERIZE_ARCH}-v${DOCKERIZE_VERSION}.tar.gz" | tar -xz -C /usr/local/bin/ -f -
 
 ENV TINI_VERSION=0.19.0
-RUN wget -nv -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static"
+RUN wget -nv -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-${TINI_ARCH}"
 RUN chmod +x /usr/local/bin/tini
 
 RUN locale-gen en_US.UTF-8
