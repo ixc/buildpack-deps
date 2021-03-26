@@ -1,5 +1,18 @@
 # syntax = docker/dockerfile:experimental
-FROM buildpack-deps:focal
+
+# Dockerize releases use a different label for arm64 than ${TARGETARCH}, so we need to
+# explicitly set ${DOCKERIZE_ARCH} in a base image for each platform.
+
+FROM buildpack-deps:focal as base-amd64
+ENV DOCKERIZE_ARCH=amd64
+ENV TINI_ARCH=amd64
+
+FROM buildpack-deps:focal as base-arm64
+ENV DOCKERIZE_ARCH=armhf
+ENV TINI_ARCH=arm64
+
+FROM base-${TARGETARCH}
+ARG TARGETARCH
 
 RUN apt-get update \
     && apt-get upgrade -y --no-install-recommends \
@@ -9,7 +22,7 @@ RUN apt-get update \
         bsdmainutils \
         dnsutils \
         gettext  \
-        git-lfs \
+        `# git-lfs` \
         htop \
         iputils-ping \
         jq \
@@ -27,30 +40,24 @@ RUN apt-get update \
         vim-tiny \
     && rm -rf rm -rf /var/lib/apt/lists/*
 
-RUN git lfs install --skip-repo --system
+# RUN git lfs install --skip-repo --system
 
-ENV CONTAINERD_FILENAME=containerd.io_1.2.13-2_amd64.deb
-ENV DOCKER_CE_CLI_FILENAME=docker-ce-cli_19.03.12~3-0~ubuntu-focal_amd64.deb
-ENV DOCKER_CE_FILENAME=docker-ce_19.03.12~3-0~ubuntu-focal_amd64.deb
-RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
-    wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${CONTAINERD_FILENAME}" \
-    && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_CE_CLI_FILENAME}" \
-    && wget -nv "https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/${DOCKER_CE_FILENAME}" \
-    && apt-get update \
-    && apt install -y --no-install-recommends "./${CONTAINERD_FILENAME}" "./${DOCKER_CE_CLI_FILENAME}" "./${DOCKER_CE_FILENAME}" \
-    && rm -rf "${CONTAINERD_FILENAME}" "${DOCKER_CE_CLI_FILENAME}" "${DOCKER_CE_FILENAME}"
+# Install Docker.
+ENV DOCKER_VERSION=20.10.5
+RUN --mount=type=cache,id=buildpack-deps-${TARGETARCH},target=/var/lib/apt/lists,sharing=private curl -Ls https://get.docker.com | VERSION="${DOCKER_VERSION}" sh
 
-ENV DOCKER_COMPOSE_VERSION=1.26.0
-RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
-RUN chmod +x /usr/local/bin/docker-compose
-RUN wget -nv -O /etc/bash_completion.d/docker-compose "https://raw.githubusercontent.com/docker/compose/${DOCKER_COMPOSE_VERSION}/contrib/completion/bash/docker-compose"
+# Install a shim that runs docker-compose in a container, for ARM64 compatibility.
+# See: https://hub.docker.com/r/linuxserver/docker-compose
+ENV DOCKER_COMPOSE_IMAGE_TAG=ghcr.io/linuxserver/docker-compose:version-1.28.5
+RUN curl -L --fail https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh -o /usr/local/bin/docker-compose \
+    && chmod +x /usr/local/bin/docker-compose
 
 # Do NOT use dockerize 0.6.1 due to https://github.com/jwilder/dockerize/issues/125
 ENV DOCKERIZE_VERSION=0.6.0
-RUN wget -nv -O - "https://github.com/jwilder/dockerize/releases/download/v${DOCKERIZE_VERSION}/dockerize-linux-amd64-v${DOCKERIZE_VERSION}.tar.gz" | tar -xz -C /usr/local/bin/ -f -
+RUN wget -nv -O - "https://github.com/jwilder/dockerize/releases/download/v${DOCKERIZE_VERSION}/dockerize-linux-${DOCKERIZE_ARCH}-v${DOCKERIZE_VERSION}.tar.gz" | tar -xz -C /usr/local/bin/ -f -
 
 ENV TINI_VERSION=0.19.0
-RUN wget -nv -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static"
+RUN wget -nv -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-${TINI_ARCH}"
 RUN chmod +x /usr/local/bin/tini
 
 RUN locale-gen en_US.UTF-8
