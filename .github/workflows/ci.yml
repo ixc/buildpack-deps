@@ -20,6 +20,7 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           file: ${{ matrix.os }}/Dockerfile
+          no-cache: ${{ github.event_name == 'schedule' }}
           push: true
           tags: ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}:sha-${{ github.sha }}-${{ matrix.os }}-${{ matrix.arch }}
     strategy:
