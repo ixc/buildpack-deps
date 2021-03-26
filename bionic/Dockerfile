@@ -43,26 +43,15 @@ RUN apt-get update \
 
 # RUN git lfs install --skip-repo --system
 
-# ENV DOCKER_PACKAGE_FILENAME=docker-ce_18.06.3~ce~3-0~ubuntu_${TARGETARCH}.deb
-# RUN --mount=type=cache,mode=0777,target=/var/lib/apt/lists \
-#     wget -nv "https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/${TARGETARCH}/${DOCKER_PACKAGE_FILENAME}" \
-#     && apt-get update \
-#     && apt install -y --no-install-recommends "./${DOCKER_PACKAGE_FILENAME}" \
-#     && rm -rf "${DOCKER_PACKAGE_FILENAME}"
+# Install Docker.
+ENV DOCKER_VERSION=20.10.5
+RUN --mount=type=cache,id=buildpack-deps-${TARGETARCH},target=/var/lib/apt/lists,sharing=private curl -Ls https://get.docker.com | VERSION="${DOCKER_VERSION}" sh
 
-# ENV DOCKER_COMPOSE_VERSION=1.26.0
-# RUN apt-get update \
-#     && apt-get install -y --no-install-recommends \
-#         python3-pip \
-#         python3-setuptools \
-#         python3-wheel \
-#     && pip3 install "docker-compose==${DOCKER_COMPOSE_VERSION}" \
-#     && rm -rf rm -rf /var/lib/apt/lists/*
-
-# ENV DOCKER_COMPOSE_VERSION=1.26.0
-# RUN wget -nv -O /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)"
-# RUN chmod +x /usr/local/bin/docker-compose
-# RUN wget -nv -O /etc/bash_completion.d/docker-compose "https://raw.githubusercontent.com/docker/compose/${DOCKER_COMPOSE_VERSION}/contrib/completion/bash/docker-compose"
+# Install a shim that runs docker-compose in a container, for ARM64 compatibility.
+# See: https://hub.docker.com/r/linuxserver/docker-compose
+ENV DOCKER_COMPOSE_IMAGE_TAG=ghcr.io/linuxserver/docker-compose:version-1.28.5
+RUN curl -L --fail https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh -o /usr/local/bin/docker-compose \
+    && chmod +x /usr/local/bin/docker-compose
 
 # Do NOT use dockerize 0.6.1 due to https://github.com/jwilder/dockerize/issues/125
 ENV DOCKERIZE_VERSION=0.6.0
