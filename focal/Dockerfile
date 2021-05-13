@@ -69,6 +69,9 @@ ENV LC_ALL=en_US.UTF-8
 # Indicate that we are running in Docker.
 ENV DOCKER=1
 
+# Hide threads, highlight program "basename", enable tree view.
+COPY htoprc /root/.config/htop/htoprc
+
 # Append to bash history.
 ENV PROMPT_COMMAND='history -a'
 
