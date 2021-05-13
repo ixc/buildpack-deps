@@ -74,6 +74,3 @@ COPY htoprc /root/.config/htop/htoprc
 
 # Append to bash history.
 ENV PROMPT_COMMAND='history -a'
-
-# Persist `~/.bash_history`, `~/.cache` and `~/.config`.
-VOLUME /root/
