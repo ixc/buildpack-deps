@@ -43,7 +43,6 @@ RUN apt-get update \
 
 # RUN git lfs install --skip-repo --system
 
-# Install Docker.
 ENV DOCKER_VERSION=20.10.12
 RUN --mount=type=cache,id=buildpack-deps-${TARGETARCH},target=/var/lib/apt/lists,sharing=private curl -Ls https://get.docker.com | VERSION="${DOCKER_VERSION}" sh
 
