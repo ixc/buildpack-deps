@@ -16,8 +16,13 @@ services:
       context: .
       dockerfile: impish/Dockerfile
     image: interaction/buildpack-deps:impish
+  jammy:
+    build:
+      context: .
+      dockerfile: jammy/Dockerfile
+    image: interaction/buildpack-deps:jammy
   latest:
     build:
       context: .
-      dockerfile: focal/Dockerfile
+      dockerfile: jammy/Dockerfile
     image: interaction/buildpack-deps:latest

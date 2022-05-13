@@ -33,6 +33,7 @@ jobs:
           - bionic
           - focal
           - impish
+          - jammy
 
   manifest:
     env:
@@ -86,6 +87,7 @@ jobs:
           - bionic
           - focal
           - impish
+          - jammy
 
   readme:
     needs: manifest
