@@ -43,14 +43,8 @@ RUN apt-get update \
 
 # RUN git lfs install --skip-repo --system
 
-ENV DOCKER_VERSION=20.10.12
+ENV DOCKER_VERSION=20.10.17
 RUN --mount=type=cache,id=buildpack-deps-${TARGETARCH},target=/var/lib/apt/lists,sharing=private curl -Ls https://get.docker.com | VERSION="${DOCKER_VERSION}" sh
-
-# Install a shim that runs docker-compose in a container, for ARM64 compatibility.
-# See: https://hub.docker.com/r/linuxserver/docker-compose
-ENV DOCKER_COMPOSE_IMAGE_TAG=ghcr.io/linuxserver/docker-compose:version-1.28.5
-RUN curl -L --fail https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh -o /usr/local/bin/docker-compose \
-    && chmod +x /usr/local/bin/docker-compose
 
 # Do NOT use dockerize 0.6.1 due to https://github.com/jwilder/dockerize/issues/125
 ENV DOCKERIZE_VERSION=0.6.0
