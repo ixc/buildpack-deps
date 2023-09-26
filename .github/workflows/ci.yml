@@ -32,7 +32,6 @@ jobs:
         os:
           - bionic
           - focal
-          - impish
           - jammy
 
   manifest:
@@ -86,7 +85,6 @@ jobs:
         os:
           - bionic
           - focal
-          - impish
           - jammy
 
   readme:
