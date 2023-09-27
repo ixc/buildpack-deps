@@ -11,11 +11,6 @@ services:
       context: .
       dockerfile: focal/Dockerfile
     image: interaction/buildpack-deps:focal
-  impish:
-    build:
-      context: .
-      dockerfile: impish/Dockerfile
-    image: interaction/buildpack-deps:impish
   jammy:
     build:
       context: .
