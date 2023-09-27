@@ -3,11 +3,11 @@
 # Dockerize releases use a different label for arm64 than ${TARGETARCH}, so we need to
 # explicitly set ${DOCKERIZE_ARCH} in a base image for each platform.
 
-FROM buildpack-deps:jammy as base-amd64
+FROM buildpack-deps:22.04 as base-amd64
 ENV DOCKERIZE_ARCH=amd64
 ENV TINI_ARCH=amd64
 
-FROM buildpack-deps:jammy as base-arm64
+FROM buildpack-deps:22.04 as base-arm64
 ENV DOCKERIZE_ARCH=armhf
 ENV TINI_ARCH=arm64
 
