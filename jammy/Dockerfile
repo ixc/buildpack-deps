@@ -34,7 +34,7 @@ RUN apt-get update \
         postgresql-client \
         pv \
         python2.7-dev \
-        python3.8-dev \
+        python3-dev \
         screen \
         supervisor \
         tmux \
