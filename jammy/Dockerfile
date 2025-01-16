@@ -39,11 +39,11 @@ RUN apt-get update \
         supervisor \
         tmux \
         vim-tiny \
-    && rm -rf rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # RUN git lfs install --skip-repo --system
 
-ENV DOCKER_VERSION=20.10.17
+ENV DOCKER_VERSION=20.10.24
 RUN --mount=type=cache,id=buildpack-deps-${TARGETARCH},target=/var/lib/apt/lists,sharing=private curl -Ls https://get.docker.com | VERSION="${DOCKER_VERSION}" sh
 
 # Do NOT use dockerize 0.6.1 due to https://github.com/jwilder/dockerize/issues/125
