@@ -60,7 +60,7 @@ jobs:
             ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}-arm64 \
             ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}-x64
       - name: Push OS manifest list
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         run: |
           # Latest.
           docker buildx imagetools create -t \
@@ -68,7 +68,7 @@ jobs:
             ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}-arm64 \
             ${{ env.IMAGE_REPO }}:${{ env.IMAGE_TAG }}-x64
       - name: Push 'latest' manifest list
-        if: github.ref == 'refs/heads/master' && matrix.os == 'focal'
+        if: github.ref == 'refs/heads/main' && matrix.os == 'focal'
         run: |
           # Latest.
           docker buildx imagetools create -t \
