@@ -16,6 +16,11 @@ services:
       context: .
       dockerfile: jammy/Dockerfile
     image: interaction/buildpack-deps:jammy
+  noble:
+    build:
+      context: .
+      dockerfile: noble/Dockerfile
+    image: interaction/buildpack-deps:noble
   latest:
     build:
       context: .
