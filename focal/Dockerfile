@@ -14,6 +14,11 @@ ENV TINI_ARCH=arm64
 FROM base-${TARGETARCH}
 ARG TARGETARCH
 
+# Install latest from official Nginx source
+RUN wget -qO - https://nginx.org/keys/nginx_signing.key | apt-key add - 2>&1 \
+    && echo "deb https://nginx.org/packages/ubuntu/ focal nginx" >> /etc/apt/sources.list \
+    && echo "deb-src https://nginx.org/packages/ubuntu/ focal nginx" >> /etc/apt/sources.list
+
 RUN apt-get update \
     && apt-get upgrade -y --no-install-recommends \
     && apt-get install -y --no-install-recommends \
