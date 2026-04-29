@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:experimental
+# syntax=docker/dockerfile:1
 
 # Dockerize releases use a different label for arm64 than ${TARGETARCH}, so we need to
 # explicitly set ${DOCKERIZE_ARCH} in a base image for each platform.
@@ -39,7 +39,7 @@ RUN apt-get update \
         supervisor \
         tmux \
         vim-tiny \
-    && rm -rf rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # RUN git lfs install --skip-repo --system
 
