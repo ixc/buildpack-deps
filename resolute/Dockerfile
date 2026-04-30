@@ -3,12 +3,12 @@
 # Dockerize releases use a different label for arm64 than ${TARGETARCH}, so we need to
 # explicitly set ${DOCKERIZE_ARCH} in a base image for each platform.
 
-FROM buildpack-deps:26.04 as base-amd64
+FROM buildpack-deps:26.04 AS base-amd64
 ENV DOCKERIZE_ARCH=amd64
 ENV TINI_ARCH=amd64
 
-FROM buildpack-deps:26.04 as base-arm64
-ENV DOCKERIZE_ARCH=armhf
+FROM buildpack-deps:26.04 AS base-arm64
+ENV DOCKERIZE_ARCH=arm64
 ENV TINI_ARCH=arm64
 
 FROM base-${TARGETARCH}
@@ -50,7 +50,19 @@ ENV TINI_VERSION=0.19.0
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends wget \
-    && wget -nv -O - "https://github.com/jwilder/dockerize/releases/download/v${DOCKERIZE_VERSION}/dockerize-linux-${DOCKERIZE_ARCH}-v${DOCKERIZE_VERSION}.tar.gz" | tar -xz -C /usr/local/bin/ -f - \
+    && ( \
+    set -e; \
+    found=''; \
+    for arch in "${DOCKERIZE_ARCH}" arm64 armhf armel; do \
+    url="https://github.com/jwilder/dockerize/releases/download/v${DOCKERIZE_VERSION}/dockerize-linux-${arch}-v${DOCKERIZE_VERSION}.tar.gz"; \
+    if wget -q --spider "${url}"; then \
+    wget -nv -O - "${url}" | tar -xz -C /usr/local/bin/ -f -; \
+    found=1; \
+    break; \
+    fi; \
+    done; \
+    test -n "${found}" \
+    ) \
     && wget -nv -O /usr/local/bin/tini "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-${TINI_ARCH}" \
     && chmod +x /usr/local/bin/tini \
     && apt-get autoremove -yqq --purge wget \
