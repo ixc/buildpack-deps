@@ -3,11 +3,11 @@
 # Dockerize releases use a different label for arm64 than ${TARGETARCH}, so we need to
 # explicitly set ${DOCKERIZE_ARCH} in a base image for each platform.
 
-FROM buildpack-deps:focal as base-amd64
+FROM buildpack-deps:focal AS base-amd64
 ENV DOCKERIZE_ARCH=amd64
 ENV TINI_ARCH=amd64
 
-FROM buildpack-deps:focal as base-arm64
+FROM buildpack-deps:focal AS base-arm64
 ENV DOCKERIZE_ARCH=armhf
 ENV TINI_ARCH=arm64
 
@@ -22,28 +22,28 @@ RUN wget -qO - https://nginx.org/keys/nginx_signing.key | apt-key add - 2>&1 \
 RUN apt-get update \
     && apt-get upgrade -y --no-install-recommends \
     && apt-get install -y --no-install-recommends \
-        atop \
-        apache2-utils \
-        apt-utils \
-        bsdmainutils \
-        dnsutils \
-        gettext  \
-        `# git-lfs` \
-        htop \
-        iputils-ping \
-        jq \
-        less \
-        locales \
-        nano \
-        nginx \
-        postgresql-client \
-        pv \
-        python2.7-dev \
-        python3.8-dev \
-        screen \
-        supervisor \
-        tmux \
-        vim-tiny \
+    atop \
+    apache2-utils \
+    apt-utils \
+    bsdmainutils \
+    dnsutils \
+    gettext  \
+    `# git-lfs` \
+    htop \
+    iputils-ping \
+    jq \
+    less \
+    locales \
+    nano \
+    nginx \
+    postgresql-client \
+    pv \
+    python2.7-dev \
+    python3.8-dev \
+    screen \
+    supervisor \
+    tmux \
+    vim-tiny \
     && rm -rf /var/lib/apt/lists/*
 
 # RUN git lfs install --skip-repo --system
