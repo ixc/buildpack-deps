@@ -99,7 +99,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}
       - name: Load HEALTHCHECK_URL
-        if: vars.HEALTHCHECK_URL
+        if: vars.HEALTHCHECK_URL != '' && vars.HEALTHCHECK_URL != null
         run: |
           curl --fail --silent --show-error \
             --retry 3 --retry-delay 2 --max-time 30 \
