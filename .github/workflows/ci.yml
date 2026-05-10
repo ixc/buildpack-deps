@@ -100,4 +100,8 @@ jobs:
           repository: ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}
       - name: Load HEALTHCHECK_URL
         if: vars.HEALTHCHECK_URL != ''
-        run: curl --fail --silent --show-error "${{ vars.HEALTHCHECK_URL }}" >/dev/null
+        run: |
+          curl --fail --silent --show-error --url "${{ vars.HEALTHCHECK_URL }}" >/dev/null || {
+            echo "Health check request failed."
+            exit 1
+          }
