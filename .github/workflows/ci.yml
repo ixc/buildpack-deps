@@ -99,11 +99,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ secrets.DOCKER_ORG }}/${{ secrets.DOCKER_REPO }}
       - name: Load HEALTHCHECK_URL
-        if: vars.HEALTHCHECK_URL != ''
+        if: vars.HEALTHCHECK_URL != '' && github.ref == 'refs/heads/main'
         run: |
           curl --fail --silent --show-error \
             --retry 3 --retry-delay 2 --max-time 30 \
             --url "${{ vars.HEALTHCHECK_URL }}" >/dev/null || {
-            echo "Healthcheck request failed for ${{ vars.HEALTHCHECK_URL }}."
+            echo "Healthcheck request failed!"
             exit 1
           }
